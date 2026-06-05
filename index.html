@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdontoSan - Sistema de Gestión Dental Inteligente</title>
+    <meta name="description" content="Solución integrada UX/UI para la Clínica Dental OdontoSan. Gestión de citas, fichas clínicas, odontograma digital, caja y comisiones en tiempo real.">
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- DEMO QUICK SWITCH BAR (For evaluation and testing) -->
+    <div class="demo-bar">
+        <span class="demo-title"><i class="fa-solid fa-flask"></i> DEMO-SANDBOX: ODONTOSAN</span>
+        <div class="demo-roles-switch" id="demo-role-switches">
+            <span style="color: var(--text-muted); margin-right: 5px;">Cambiar Rol:</span>
+            <button class="btn-demo-switch" data-role="gerente">Gerente</button>
+            <button class="btn-demo-switch" data-role="recepcionista">Recepcionista</button>
+            <button class="btn-demo-switch" data-role="doctor">Doctor</button>
+            <button class="btn-demo-switch" data-role="contador">Contador</button>
+            <button class="btn-demo-switch" data-role="almacen">Almacén</button>
+            <button class="btn-demo-switch" data-role="paciente">Paciente</button>
+        </div>
+        <div class="theme-toggle">
+            <button class="btn-demo-switch" id="theme-toggle-btn"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </div>
+
+    <!-- ----------------- VIEW 1: LOGIN ----------------- -->
+    <section id="view-login" class="login-container">
+        <div class="login-card animate-fade-in">
+            <div class="login-info-side">
+                <div class="brand-section" style="background: white; padding: 12px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; width: 100%; box-shadow: var(--shadow-sm); margin-bottom: 25px;">
+                    <img src="logo.jpg" alt="OdontoSan Logo" style="height: 55px; object-fit: contain;">
+                </div>
+                
+                <div class="info-content">
+                    <h2>Gestión Clínica Inteligente Centrada en el Usuario</h2>
+                    <p>Accede a la plataforma unificada para el personal médico, administrativo, contable y de gerencia. Optimiza la atención al paciente y la comunicación interna.</p>
+                </div>
+                
+                <div class="login-footer-info">
+                    <span>Clínica Dental OdontoSan © 2026</span><br>
+                    <span>Jesús María, Lima</span>
+                </div>
+            </div>
+            
+            <div class="login-form-side">
+                <h3>Iniciar Sesión</h3>
+                <form id="login-form" onsubmit="event.preventDefault();">
+                    <div class="input-group">
+                        <label for="login-user">Usuario / Rol</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user input-icon"></i>
+                            <select id="login-user" required>
+                                <option value="gerente">Dr. Carlos Mendoza (Gerente / Director)</option>
+                                <option value="recepcionista">Milagros (Recepcionista)</option>
+                                <option value="doctor">Dr. Carlos Arana (Doctor Especialista)</option>
+                                <option value="almacen">Fiorella (Almacén / Facturación)</option>
+                                <option value="contador">Don Lucho (Contador)</option>
+                                <option value="paciente">Paciente VIP (Sra. Paty)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="login-pass">Contraseña</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock input-icon"></i>
+                            <input type="password" id="login-pass" value="••••••••" required disabled>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="btn-login-submit" class="btn-primary">
+                        <span>Ingresar al Sistema</span>
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </form>
+                
+                <div class="quick-roles">
+                    <label>Roles de Acceso Directo</label>
+                    <div class="roles-grid">
+                        <button type="button" class="btn-role-quick" data-role="gerente">Gerente</button>
+                        <button type="button" class="btn-role-quick" data-role="recepcionista">Recepción</button>
+                        <button type="button" class="btn-role-quick" data-role="doctor">Box / Doctor</button>
+                        <button type="button" class="btn-role-quick" data-role="contador">Contador</button>
+                        <button type="button" class="btn-role-quick" data-role="almacen">Almacén</button>
+                        <button type="button" class="btn-role-quick" data-role="paciente">Paciente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ----------------- VIEW 2: BACK-OFFICE APP LAYOUT ----------------- -->
+    <section id="view-app" class="app-wrapper hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="sidebar-logo-container" style="background: white; padding: 8px; border-radius: var(--radius-md); margin-bottom: 15px; text-align: center; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                    <img src="logo.jpg" alt="OdontoSan Logo" style="height: 38px; object-fit: contain; width: 100%;">
+                </div>
+                
+                <ul class="sidebar-menu">
+                    <!-- Gerente view menu -->
+                    <li class="menu-item" data-target="dashboard" id="menu-dashboard">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span class="menu-text">Dashboard Principal</span>
+                    </li>
+                    <li class="menu-item" data-target="citas" id="menu-citas">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span class="menu-text">Gestión de Citas</span>
+                        <span class="menu-badge hidden" id="citas-pending-badge">2</span>
+                    </li>
+                    <li class="menu-item" data-target="fichas" id="menu-fichas">
+                        <i class="fa-solid fa-file-medical"></i>
+                        <span class="menu-text">Fichas Clínicas</span>
+                    </li>
+                    <li class="menu-item" data-target="comunicacion" id="menu-comunicacion">
+                        <i class="fa-solid fa-comments"></i>
+                        <span class="menu-text">Comunicación Interna</span>
+                        <span class="menu-badge" id="internal-noti-badge">3</span>
+                    </li>
+                    <li class="menu-item" data-target="inventario" id="menu-inventario">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span class="menu-text">Inventario</span>
+                    </li>
+                    <li class="menu-item" data-target="caja" id="menu-caja">
+                        <i class="fa-solid fa-cash-register"></i>
+                        <span class="menu-text">Caja y Facturación</span>
+                    </li>
+                    <li class="menu-item" data-target="comisiones" id="menu-comisiones">
+                        <i class="fa-solid fa-percent"></i>
+                        <span class="menu-text">Comisiones</span>
+                    </li>
+                    <li class="menu-item" data-target="reportes" id="menu-reportes">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        <span class="menu-text">Reportes</span>
+                    </li>
+                    <li class="menu-item" data-target="rrhh" id="menu-rrhh">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span class="menu-text">RRHH</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-profile">
+                <div class="profile-card">
+                    <div class="profile-avatar-wrapper">
+                        <img id="user-avatar" class="profile-avatar" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=100&auto=format&fit=crop&q=80" alt="Avatar">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="user-display-name">Milagros</div>
+                        <div class="profile-role" id="user-display-role">Recepcionista</div>
+                    </div>
+                </div>
+                <button class="btn-logout" id="btn-app-logout">
+                    <i class="fa-solid fa-power-off"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN WINDOW -->
+        <main class="main-content">
+            
+            <!-- MAIN HEADER -->
+            <header class="main-header">
+                <div class="header-left">
+                    <h2 class="header-title" id="page-title">Panel de Recepción</h2>
+                    <span class="header-subtitle" id="header-date">Jueves, 4 de Junio, 2026 - 18:39</span>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Buscar paciente, doctor...">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-icon-action" id="btn-global-notif">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="badge-dot"></span>
+                        </button>
+                        <button class="btn-icon-action" id="btn-global-settings">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- SUB-PANEL CONTAINER -->
+            <div id="sub-panel-content">
+                
+                <!-- CONTENT DYNAMICALLY INJECTED BY app.js -->
+                
+            </div>
+            
+        </main>
+    </section>
+
+    <!-- ----------------- VIEW 3: PACIENTE PORTAL (SEPARATE DESIGN) ----------------- -->
+    <section id="view-patient-portal" class="app-wrapper hidden">
+        <!-- Sidebar Paciente -->
+        <aside class="sidebar" style="top: 40px;">
+            <div class="sidebar-top">
+                <div class="sidebar-logo-container" style="background: white; padding: 8px; border-radius: var(--radius-md); margin-bottom: 15px; text-align: center; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                    <img src="logo.jpg" alt="OdontoSan Logo" style="height: 38px; object-fit: contain; width: 100%;">
+                </div>
+                
+                <ul class="sidebar-menu">
+                    <li class="menu-item" id="patient-menu-profile">
+                        <i class="fa-solid fa-user-circle"></i>
+                        <span class="menu-text">Mi Perfil</span>
+                    </li>
+                    <li class="menu-item" id="patient-menu-citas">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span class="menu-text">Mis Citas</span>
+                    </li>
+                    <li class="menu-item" id="patient-menu-info">
+                        <i class="fa-solid fa-info-circle"></i>
+                        <span class="menu-text">Información</span>
+                    </li>
+                    <li class="menu-item active" id="patient-menu-nueva">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                        <span class="menu-text">Nueva Cita</span>
+                    </li>
+                    <li class="menu-item" id="patient-menu-historial">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span class="menu-text">Historial</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-profile">
+                <div class="profile-card">
+                    <div class="profile-avatar-wrapper" style="border-color: var(--secondary);">
+                        <img class="profile-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" alt="Sra Paty">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name" style="color: white;">Sra. Paty</div>
+                        <div class="profile-role" style="color: var(--text-muted);">Paciente VIP</div>
+                    </div>
+                </div>
+                <button class="btn-logout" id="btn-patient-logout">
+                    <i class="fa-solid fa-power-off"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Window Paciente -->
+        <main class="main-content" style="padding-top: 150px !important;">
+            <header class="main-header" style="top: 40px;">
+                <div class="header-left">
+                    <h2 class="header-title">Reserva de Citas Online</h2>
+                    <span class="header-subtitle" style="color: var(--text-secondary);">Portal del Paciente</span>
+                </div>
+                <div class="header-right">
+                    <span style="color: var(--text-muted); font-size: 13px;">http://odontosan.com/paciente/reservas</span>
+                </div>
+            </header>
+
+            <div class="booking-container">
+                <div class="booking-header">
+                    <h2>Agenda tu Cita Odontológica</h2>
+                    <p>Completa el formulario en 3 pasos para confirmar tu espacio con nuestros especialistas en tiempo real.</p>
+                </div>
+
+                <!-- Stepper -->
+                <div class="steps-indicator">
+                    <div class="step-pill active" id="step-1-indicator">
+                        <div class="step-circle">1</div>
+                        <span>Especialidad</span>
+                    </div>
+                    <div class="step-divider" id="step-1-2-divider"></div>
+                    <div class="step-pill" id="step-2-indicator">
+                        <div class="step-circle">2</div>
+                        <span>Horario</span>
+                    </div>
+                    <div class="step-divider" id="step-2-3-divider"></div>
+                    <div class="step-pill" id="step-3-indicator">
+                        <div class="step-circle">3</div>
+                        <span>Confirmar</span>
+                    </div>
+                </div>
+
+                <!-- Step Contents -->
+                <div id="booking-step-contents">
+                    
+                    <!-- STEP 1: SELECT SPECIALTY -->
+                    <div id="booking-step-1" class="animate-fade-in">
+                        <div class="specialty-grid">
+                            <div class="specialty-card" data-specialty="Curación Estética">
+                                <div class="specialty-icon-wrapper"><i class="fa-solid fa-tooth"></i></div>
+                                <div class="specialty-name">Curación Estética</div>
+                                <div class="specialty-desc">Restauraciones de resinas de alta calidad, carillas estéticas y blanqueamiento.</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="Ortodoncia">
+                                <div class="specialty-icon-wrapper"><i class="fa-solid fa-circle-nodes"></i></div>
+                                <div class="specialty-name">Ortodoncia</div>
+                                <div class="specialty-desc">Instalación y control mensual de brackets metálicos y estéticos para alineación dental.</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="Odontopediatría">
+                                <div class="specialty-icon-wrapper"><i class="fa-solid fa-child"></i></div>
+                                <div class="specialty-name">Odontopediatría</div>
+                                <div class="specialty-desc">Atención y cuidado dental especializado para la salud bucal de niños y bebés.</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="Endodoncia">
+                                <div class="specialty-icon-wrapper"><i class="fa-solid fa-square-minus"></i></div>
+                                <div class="specialty-name">Endodoncia</div>
+                                <div class="specialty-desc">Tratamientos de conductos radiculares para salvar piezas dentarias dañadas.</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="Cirugía Bucal">
+                                <div class="specialty-icon-wrapper"><i class="fa-solid fa-briefcase-medical"></i></div>
+                                <div class="specialty-name">Cirugía Bucal</div>
+                                <div class="specialty-desc">Extracciones de terceras molares y cirugías reconstructivas menores.</div>
+                            </div>
+                            <div class="specialty-card" data-specialty="Implantes">
+                                <div class="specialty-icon-wrapper"><i class="fa-solid fa-screw-driver"></i></div>
+                                <div class="specialty-name">Implantes Dentales</div>
+                                <div class="specialty-desc">Colocación de raíces artificiales de titanio para reemplazo dental completo.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: SELECT DOCTOR & TIME -->
+                    <div id="booking-step-2" class="animate-fade-in hidden">
+                        <div class="doc-selection-panel">
+                            <div>
+                                <h4 style="margin-bottom: 12px; font-size: 14px;">Especialista Recomendado</h4>
+                                <div class="doctor-list-scroller" id="booking-doctors-list">
+                                    <!-- Dynamic Inject -->
+                                </div>
+                            </div>
+                            <div>
+                                <div class="calendar-panel">
+                                    <div class="calendar-header">
+                                        <h4 id="calendar-month-year">Junio 2026</h4>
+                                        <div style="display: flex; gap: 5px;">
+                                            <button class="btn-demo-switch" style="padding: 2px 6px;" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                                            <button class="btn-demo-switch" style="padding: 2px 6px;" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-weeks" id="booking-calendar-grid">
+                                        <!-- Days header & buttons injected dynamically -->
+                                    </div>
+                                    
+                                    <div class="time-slots-section">
+                                        <h5>Horarios Disponibles</h5>
+                                        <div class="time-slots-grid" id="booking-slots-grid">
+                                            <!-- Dynamically injected -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: CONFIRMATION -->
+                    <div id="booking-step-3" class="animate-fade-in hidden">
+                        <div class="confirm-panel">
+                            <div class="appointment-summary-box">
+                                <div class="summary-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                                <div class="summary-details">
+                                    <h4>Detalles de la Cita Seleccionada</h4>
+                                    <p><strong>Especialidad:</strong> <span id="summary-specialty">Curación Estética</span></p>
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                                        <img id="summary-doc-img" src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=100&auto=format&fit=crop&q=80" alt="Doc" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                        <div>
+                                            <p style="margin:0;"><strong id="summary-doc-name">Dr. Carlos Arana</strong></p>
+                                            <p style="margin:0; font-size:10px; color: var(--text-muted);">Especialista en Curación Estética</p>
+                                        </div>
+                                    </div>
+                                    <p style="margin-top: 8px;"><strong>Horario:</strong> <span id="summary-time">Martes 23 Jun - 10:00 AM</span></p>
+                                </div>
+                            </div>
+
+                            <form id="booking-patient-form" onsubmit="event.preventDefault();">
+                                <h4 style="font-size: 14px; margin-bottom: 15px; text-transform: uppercase;">Confirmar Tus Datos</h4>
+                                <div class="form-group" style="margin-bottom: 12px;">
+                                    <label for="patient-form-name">Nombre Completo</label>
+                                    <input type="text" id="patient-form-name" placeholder="Ej. Paty de la Cruz" value="Sra. Paty" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="patient-form-phone">Teléfono Móvil</label>
+                                        <input type="tel" id="patient-form-phone" placeholder="Ej. 987654321" value="994321876" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="patient-form-email">Correo Electrónico</label>
+                                        <input type="email" id="patient-form-email" placeholder="Ej. paty@email.com" value="paty.cruz@gmail.com" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="patient-form-sms" checked>
+                                    <label for="patient-form-sms"><i class="fa-solid fa-comment-sms" style="color: var(--secondary); margin-right: 4px;"></i> Acepto recibir recordatorio de cita y confirmación vía SMS/WhatsApp</label>
+                                </div>
+
+                                <button type="button" id="btn-patient-confirm-booking" class="btn-primary" style="background: var(--success); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                                    <span>CONFIRMAR MI CITA</span>
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- SUCCESS VIEW -->
+                    <div id="booking-success" class="card success-card animate-fade-in hidden">
+                        <div class="success-icon-container">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <h3>¡Cita Confirmada con Éxito!</h3>
+                        <p>Hemos enviado un correo de confirmación a tu bandeja y un recordatorio SMS a tu celular. Tu cita ya ha sido registrada en nuestro servidor centralizado en la nube de OdontoSan.</p>
+                        <div class="appointment-summary-box" style="max-width: 450px; margin: 0 auto 25px auto; text-align: left;">
+                            <div class="summary-details">
+                                <p><strong>Paciente:</strong> <span id="success-pat-name">Sra. Paty</span></p>
+                                <p><strong>Especialista:</strong> <span id="success-pat-doc">Dr. Carlos Arana</span></p>
+                                <p><strong>Horario:</strong> <span id="success-pat-time">Martes 23 Jun - 10:00 AM</span></p>
+                                <p style="font-size: 11px; color: var(--success); margin-top: 8px;"><i class="fa-solid fa-shield-halved"></i> Código de confirmación: <strong>OS-99432</strong></p>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" id="btn-patient-booking-restart" style="padding: 10px 20px;">
+                            <i class="fa-solid fa-rotate-left"></i> Agendar Otra Cita
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ----------------- GLOBAL WHATSAPP FLOATING WIDGET ----------------- -->
+    <div class="whatsapp-fab" id="whatsapp-widget" title="Chatear con OdontoSan">
+        <i class="fa-brands fa-whatsapp"></i>
+    </div>
+
+    <!-- ----------------- TOAST CONTAINER ----------------- -->
+    <div class="toast-container" id="toast-outlet"></div>
+
+    <!-- ----------------- MODAL OVERLAYS ----------------- -->
+    
+    <!-- 1. NOTIFICACIÓN DEL DOCTOR MODAL -->
+    <div class="modal-overlay hidden" id="modal-doctor-notif">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h4><i class="fa-solid fa-paper-plane" style="color: var(--alert); margin-right: 8px;"></i> Notificar a Recepción</h4>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 12px;">Selecciona el tipo de comunicación que deseas enviar a recepción (Milagros):</p>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label for="doctor-notif-type">Mensaje Tipo</label>
+                    <select id="doctor-notif-type">
+                        <option value="insumo">Necesito Insumo (Ej. Resina A2)</option>
+                        <option value="pago">Paciente pasa a caja</option>
+                        <option value="libre">Box libre — siguiente paciente</option>
+                        <option value="asistente">Solicito Asistente Urgente</option>
+                    </select>
+                </div>
+                <div class="form-group" id="notif-detail-group">
+                    <label for="doctor-notif-detail">Detalle del Requerimiento</label>
+                    <input type="text" id="doctor-notif-detail" placeholder="Especificar insumo o requerimiento adicional" value="Resina A2">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-close-doc-modal">Cancelar</button>
+                <button class="btn-primary" id="btn-send-doc-notif" style="width: auto; padding: 8px 18px;">
+                    Enviar Notificación
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. COBRO DE PACIENTE EN CAJA MODAL (RECEPCIONISTA) -->
+    <div class="modal-overlay hidden" id="modal-checkout-pay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h4><i class="fa-solid fa-cash-register" style="color: var(--primary); margin-right: 8px;"></i> Procesar Cobro de Tratamiento</h4>
+            </div>
+            <div class="modal-body">
+                <div class="appointment-summary-box" style="margin-bottom: 15px; padding: 10px;">
+                    <div style="font-size: 12px; width: 100%;">
+                        <p><strong>Paciente:</strong> <span id="checkout-pat-name">Sra. Paty</span></p>
+                        <p><strong>Tratamiento:</strong> <span id="checkout-treatment-name">Curación Estética</span></p>
+                        <p><strong>Doctor:</strong> <span id="checkout-doc-name">Dr. Carlos Arana</span></p>
+                    </div>
+                </div>
+                
+                <h5 style="margin-bottom: 10px; font-size: 12px; text-transform: uppercase;">Detalle de Pago Mixto</h5>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pay-cash">Efectivo (S/.)</label>
+                        <input type="number" id="pay-cash" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="pay-yape">Yape / Plin (S/.)</label>
+                        <input type="number" id="pay-yape" value="0" min="0">
+                    </div>
+                </div>
+                <div class="form-row" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label for="pay-pos">POS Visa/MC (S/.)</label>
+                        <input type="number" id="pay-pos" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Tratamiento</label>
+                        <input type="text" id="checkout-cost-total" value="S/. 280.00" disabled style="font-weight: bold;">
+                    </div>
+                </div>
+
+                <div class="payment-sum-box">
+                    <div class="sum-row">
+                        <span>Total Registrado:</span>
+                        <span id="checkout-sum-registered" style="font-weight: 700;">S/. 0.00</span>
+                    </div>
+                    <div class="sum-row total" id="checkout-sum-remaining-row">
+                        <span>Falta Cobrar:</span>
+                        <span id="checkout-sum-remaining" style="color: var(--danger);">S/. 280.00</span>
+                    </div>
+                    <div class="sum-row success-match hidden" id="checkout-sum-match-row">
+                        <span>¡Monto Cuadrado! <i class="fa-solid fa-circle-check"></i></span>
+                        <span>Listo para Guardar</span>
+                    </div>
+                    <div class="sum-row mismatch hidden" id="checkout-sum-error-row">
+                        <span><i class="fa-solid fa-circle-exclamation"></i> Los montos no coinciden con el total del tratamiento.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-close-pay-modal">Cancelar</button>
+                <button class="btn-primary" id="btn-submit-pay-checkout" disabled style="width: auto; padding: 8px 18px; background: var(--success);">
+                    Cerrar Cobro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. CONFIRMACIÓN DE CIERRE DE MES (CONTADOR / DON LUCHO) -->
+    <div class="modal-overlay hidden" id="modal-close-month">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h4><i class="fa-solid fa-shield-cat" style="color: var(--alert); margin-right: 8px;"></i> Cierre de Mes y Generación de Liquidación</h4>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 12px; line-height: 1.5;">¿Está seguro de realizar el Cierre Contable del Período <strong>Octubre 2025</strong>?</p>
+                <p style="margin-bottom: 12px; color: var(--text-muted); font-size: 11px;"><i class="fa-solid fa-triangle-exclamation" style="color: var(--warning)"></i> Esta acción consolidará los ingresos de S/. 35,000.00, registrará las comisiones calculadas de S/. 5,250.00 para los doctores y reiniciará los registros en el Cuaderno Digital.</p>
+                <p>Las comisiones calculadas se enviarán por correo a los doctores y se generará el archivo final para Don Lucho.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-close-month-modal-cancel">Cancelar Cierre</button>
+                <button class="btn-primary" id="btn-close-month-modal-confirm" style="width: auto; padding: 8px 18px; background: var(--alert);">
+                    Cerrar Mes y Liquidar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. EMAIL COMPOSER MODAL (DON LUCHO / CONTADOR) -->
+    <div class="modal-overlay hidden" id="modal-email-composer">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h4><i class="fa-solid fa-paper-plane" style="color: var(--secondary); margin-right: 8px;"></i> Enviar Liquidación por Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>Para:</label>
+                    <input type="email" id="email-to" value="lucho.contador@odontosan.pe" disabled>
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>Asunto:</label>
+                    <input type="text" id="email-subject" value="Liquidación de Comisiones Consolidada - Octubre 2025">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>Mensaje:</label>
+                    <textarea id="email-body" style="height: 120px; font-size: 12px; resize: none;"></textarea>
+                </div>
+                
+                <!-- Email Sending progress -->
+                <div class="hidden" id="email-sending-progress" style="margin-top: 15px; text-align: center; color: var(--secondary);">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 8px;"></i>
+                    <p style="font-size: 12px;">Enviando correo a lucho.contador@odontosan.pe...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btn-close-email-modal">Cancelar</button>
+                <button class="btn-primary" id="btn-send-email-submit" style="width: auto; padding: 8px 18px; background: var(--secondary);">
+                    Enviar Correo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
